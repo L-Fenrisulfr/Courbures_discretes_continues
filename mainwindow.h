@@ -43,6 +43,8 @@ public:
     void displayMesh(MyMesh *_mesh, bool isTemperatureMap = false, float mapRange = -1, ColorBy cb = ColorBy::CBFace);
     void resetAllColorsAndThickness(MyMesh* _mesh);
 
+    void voisinnageSommet(MyMesh* _mesh, unsigned int vertexID);
+
     float angleEE(MyMesh* _mesh, int vertexID, int faceID);
     float faceArea(MyMesh* _mesh, int faceID);
     float barycentricArea(MyMesh* _mesh, int vertexID);
@@ -56,6 +58,8 @@ private slots:
     void on_pushButton_courbures_clicked();
 
     void on_pushButton_K_clicked();
+
+    void on_pushButton_VertexVoisins_clicked();
 
 private:
 

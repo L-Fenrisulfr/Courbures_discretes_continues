@@ -144,6 +144,20 @@ void MainWindow::resetAllColorsAndThickness(MyMesh* _mesh)
     }
 }
 
+void MainWindow::voisinnageSommet(MyMesh *_mesh, unsigned int vertexID)
+{
+    QVector<int> vect_ids;
+    vect_ids.reserve(7);
+    for (MyMesh::VertexVertexIter vv_it = _mesh->vv_iter(_mesh->vertex_handle(vertexID)); vv_it.is_valid(); vv_it++)
+        vect_ids.push_back(vv_it->idx());
+
+    qDebug() << "Sommet id [ " << vertexID << " ], nombre de voisins [ " << vect_ids.size() << " ], ids voisins [ ";
+    for (auto &i : vect_ids)
+        qDebug() << i;
+    qDebug() << " ].";
+
+}
+
 float MainWindow::angleEE(MyMesh* _mesh, int vertexID,  int faceID)
 {
     qDebug() << __FUNCTION__;
@@ -479,4 +493,11 @@ void MainWindow::on_pushButton_K_clicked()
 {
     K_Curv(&mesh);
     displayMesh(&mesh, true); // true permet de passer en mode "carte de temperatures", avec une gestion automatique de la couleur (voir exemple)
+}
+
+void MainWindow::on_pushButton_VertexVoisins_clicked()
+{
+    for (MyMesh::VertexIter v_it = mesh.vertices_sbegin(); v_it != mesh.vertices_end(); v_it++) {
+        voisinnageSommet(&mesh, static_cast<unsigned>( v_it->idx() ) );
+    }
 }

@@ -59,6 +59,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="pushButton_VertexVoisins">
+         <property name="text">
+          <string>Sommets Voisins</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="pushButton_K">
          <property name="text">
           <string>Courbure Gaussienne</string>
