@@ -59,9 +59,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="remaillage_incremental">
+        <widget class="QPushButton" name="pushButton_K">
          <property name="text">
-          <string>remaillage_incremental</string>
+          <string>Courbure Gaussienne</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Courbure Moyenne</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_generer">
+         <property name="text">
+          <string>Générer mesh</string>
          </property>
         </widget>
        </item>
@@ -77,13 +91,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_angleArea">
-         <property name="text">
-          <string>Test angles/aires</string>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

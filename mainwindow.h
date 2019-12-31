@@ -16,18 +16,20 @@ using namespace OpenMesh::Attributes;
 struct MyTraits : public OpenMesh::DefaultTraits
 {
     // use vertex normals and vertex colors
-    VertexAttributes( OpenMesh::Attributes::Normal | OpenMesh::Attributes::Color );
+    VertexAttributes( OpenMesh::Attributes::Normal | OpenMesh::Attributes::Color | OpenMesh::Attributes::Status);
     // store the previous halfedge
     HalfedgeAttributes( OpenMesh::Attributes::PrevHalfedge );
     // use face normals face colors
-    FaceAttributes( OpenMesh::Attributes::Normal | OpenMesh::Attributes::Color );
-    EdgeAttributes( OpenMesh::Attributes::Color );
+    FaceAttributes( OpenMesh::Attributes::Normal | OpenMesh::Attributes::Color | OpenMesh::Attributes::Status);
+    EdgeAttributes( OpenMesh::Attributes::Color | OpenMesh::Attributes::Status );
     // vertex thickness
     VertexTraits{float thickness; float value;};
     // edge thickness
     EdgeTraits{float thickness;};
 };
 typedef OpenMesh::TriMesh_ArrayKernelT<MyTraits> MyMesh;
+
+enum class ColorBy { CBFace , CBEdge , CBVertex } ;
 
 class MainWindow : public QMainWindow
 {
@@ -38,44 +40,35 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void getPointsEdge(MyMesh *_mesh,EdgeHandle *edge,VertexHandle *vh1,VertexHandle *vh2);
-    void getFacesSharedByEdge(MyMesh *_mesh, FaceHandle *Fh0, FaceHandle *Fh1,
-                                EdgeHandle *edge);
-    void getOppositeVertexOfNeighoorFaces(MyMesh *_mesh, FaceHandle fh0,
-                                                     FaceHandle fh1, VertexHandle *vh0, VertexHandle *vh1);
-    void edgeSplit(MyMesh *_mesh, EdgeHandle *edge, double maxLength);
-    void verticesShift(MyMesh *_mesh);
-    void displayMesh(MyMesh *_mesh, bool isTemperatureMap = false, float mapRange = -1);
+    void displayMesh(MyMesh *_mesh, bool isTemperatureMap = false, float mapRange = -1, ColorBy cb = ColorBy::CBFace);
     void resetAllColorsAndThickness(MyMesh* _mesh);
-    void oneRingNeighbors_Barycenter(MyMesh * _mesh, std::vector<double> *barycenter,
-                                                 VertexHandle v);
-    void getVertexSurfaceApproximation(MyMesh *_mesh,VertexHandle v,
-                                                   std::vector<double> barycenterPoint);
-    void setVertexCoordonate(MyMesh *_mesh,VertexHandle v,double x,double y, double z);
-    double getAngle(MyMesh* _mesh, int vertexID,  int faceID);
-    double getmeshAngleQuality(MyMesh *_mesh);
-    double getLenghtEdge(MyMesh *_mesh,EdgeHandle edge);
-    double getLenghtPoint1Point2(MyMesh *_mesh,VertexHandle v1,VertexHandle v2);
-    void collapsShortEdge(MyMesh *_mesh, double minLength, double maxLength);
-    void collapseEdge(MyMesh* _mesh, int edgeID);
-    void edgesSplit(MyMesh *_mesh, double maxLength);
-    void valenceEgalisation(MyMesh *_mesh);
-    int getVertexValence(MyMesh *_mesh, VertexHandle v);
+
+    float angleEE(MyMesh* _mesh, int vertexID, int faceID);
+    float faceArea(MyMesh* _mesh, int faceID);
+    float barycentricArea(MyMesh* _mesh, int vertexID);
+    double getNeighboringFacesNormale_Angle(MyMesh* _mesh, MyMesh::Point p1, MyMesh::Point p2);
+    MyMesh::Point getFaceNormal(MyMesh* _mesh,VertexHandle v0, VertexHandle v1, VertexHandle v2);
+    void getPointSharedByFaces(MyMesh *_mesh, FaceHandle f1, FaceHandle f2, MyMesh::Point *p1, MyMesh::Point *p2);
+    double getLenghtPoint1Point2(MyMesh *_mesh,MyMesh::Point p1, MyMesh::Point p2);
+    void K_Curv(MyMesh* _mesh);
+    void H_Curv(MyMesh* _mesh);
 
 private slots:
-
     void on_pushButton_chargement_clicked();
-    void on_remaillage_incremental_clicked();
+
+    void on_pushButton_generer_clicked();
+
+    void on_pushButton_courbures_clicked();
+
+    void on_pushButton_K_clicked();
+
+    void on_pushButton_H_clicked();
+
+    void on_pushButton_clicked();
 
 private:
 
-    bool modevoisinage;
-
     MyMesh mesh;
-
-    int vertexSelection;
-    int edgeSelection;
-    int faceSelection;
 
     Ui::MainWindow *ui;
 };

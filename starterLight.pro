@@ -29,6 +29,7 @@ unix:!macx {
     LIBS += -L$$PWD/../OpenMesh/liblinux/ -lOpenMeshCore
 
     INCLUDEPATH += $$PWD/../OpenMesh/inc/
+    INCLUDEPATH += $$PWD/../
     DEPENDPATH += $$PWD/../OpenMesh/inc/
     DEPENDPATH += $$PWD/../OpenMesh/liblinux/
 }
@@ -41,11 +42,14 @@ macx: {
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    meshviewerwidget.cpp
+    meshviewerwidget.cpp \
+    courbures.cpp
+
 
 HEADERS += \
         mainwindow.h \
-    meshviewerwidget.h
+    meshviewerwidget.h \
+    courbures.h
 
 FORMS += \
         mainwindow.ui
