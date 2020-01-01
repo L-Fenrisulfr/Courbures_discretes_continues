@@ -322,41 +322,46 @@ void MainWindow::H_Curv(MyMesh* _mesh)
     for (MyMesh::VertexIter curVert = _mesh->vertices_begin(); curVert != _mesh->vertices_end(); curVert++) {
         std::vector<MyMesh::Point> vertexNormals;
         std::vector<FaceHandle> vertexFaces;
+        qDebug()<<"=========== sommet courant : ============"<<curVert->idx();
 
         float somme_teta = 0.0;
         for (MyMesh::VertexFaceIter curFace = _mesh->vf_iter(*curVert); curFace.is_valid(); curFace++) {
-            //somme_teta += angleFF (_mesh, curVert->idx(), curFace->idx());
             std::vector<VertexHandle> opositeVertex;
             for (MyMesh::FaceVertexIter curVert2 = _mesh->fv_iter(*curFace); curVert2.is_valid(); curVert2++) {
                 if(*curVert2 != *curVert)
                     opositeVertex.push_back(*curVert2);
+
             }
             vertexNormals.push_back(getFaceNormal(&mesh,*curVert, opositeVertex[0],opositeVertex[1]));
             vertexFaces.push_back(curFace);
         }
 
-        int count = 0;
-        std::vector<MyMesh::Point> neighboringFaceNormals;
-        std::vector<FaceHandle> neighboringFace;
         for(int i=0; i<vertexNormals.size(); i++)
         {
-            count ++;
-            if(count % 2 == 0)
-            {
-                count = 0;
-                MyMesh::Point p1,p2;
+            MyMesh::Point n1,n2;
+            FaceHandle f1,f2;
 
-                getPointSharedByFaces(&mesh,neighboringFace[0],neighboringFace[1], &p1,&p2);
-                float length_edge = getLenghtPoint1Point2(&mesh,p1,p2);
-                somme_teta += getNeighboringFacesNormale_Angle(&mesh,vertexNormals[0],vertexNormals[1])*length_edge;
-                i=i-2;
+            if(i==vertexNormals.size()-1)
+            {
+                n1 = vertexNormals[i];
+                n2 = vertexNormals[0];
+                f1 = vertexFaces[i];
+                f2 = vertexFaces[0];
             }
             else
             {
-                neighboringFaceNormals.push_back(vertexNormals[i]);
-                neighboringFace.push_back(vertexFaces[i]);
+                n1 = vertexNormals[i];
+                n2 = vertexNormals[i+1];
+                f1 = vertexFaces[i];
+                f2 = vertexFaces[i+1];
             }
+            MyMesh::Point p1_shared,p2_shared;
 
+            getPointSharedByFaces(&mesh,f1,f2, &p1_shared,&p2_shared);
+            float length_edge = getLenghtPoint1Point2(&mesh,p1_shared,p2_shared);
+            somme_teta += getNeighboringFacesNormale_Angle(&mesh,n1,n2)*length_edge;
+            qDebug()<<"angle :"<<getNeighboringFacesNormale_Angle(&mesh,n1,n2);
+            qDebug()<<"longueur arête"<<length_edge;
         }
 
         float aire_barycentric = barycentricArea(_mesh, curVert->idx());
